@@ -29,6 +29,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       match: [/^[0-9]{10,11}$/, "Số điện thoại không hợp lệ"],
       trim: true,
+      default: null,
     },
     avatar: {
       type: String,
