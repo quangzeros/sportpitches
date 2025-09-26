@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+// import { useDispatch } from "react-redux";
+import authService from "../services/callAuthApi";
 
 function Register() {
   const [userData, setUserData] = useState({
@@ -8,14 +9,13 @@ function Register() {
     email: "",
     phone: "",
     password: "",
-    confirmPassword: "",
+    passwordConfirm: "",
     acceptTerms: false,
   });
 
   const [formErrors, setFormErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   // Handle form input changes
   const handleChange = (e) => {
@@ -62,8 +62,8 @@ function Register() {
       isValid = false;
     }
 
-    if (userData.confirmPassword !== userData.password) {
-      errors.confirmPassword = "Xác nhận mật khẩu không khớp";
+    if (userData.passwordConfirm !== userData.password) {
+      errors.passwordConfirm = "Xác nhận mật khẩu không khớp";
       isValid = false;
     }
 
@@ -87,9 +87,7 @@ function Register() {
     setIsSubmitting(true);
 
     try {
-      // Here you would typically dispatch a register action
-      // For demo purposes, we'll simulate a successful registration
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await authService.register(userData);
 
       // Show success message and redirect to login
       navigate("/login", {
@@ -262,30 +260,30 @@ function Register() {
 
             <div>
               <label
-                htmlFor="confirmPassword"
+                htmlFor="passwordConfirm"
                 className="block text-sm font-medium text-gray-700 dark:text-gray-300"
               >
                 Xác nhận mật khẩu <span className="text-red-500">*</span>
               </label>
               <div className="mt-1">
                 <input
-                  id="confirmPassword"
-                  name="confirmPassword"
+                  id="passwordConfirm"
+                  name="passwordConfirm"
                   type="password"
                   autoComplete="new-password"
                   required
-                  value={userData.confirmPassword}
+                  value={userData.passwordConfirm}
                   onChange={handleChange}
                   className={`appearance-none block w-full px-3 py-2 border ${
-                    formErrors.confirmPassword
+                    formErrors.passwordConfirm
                       ? "border-red-300 dark:border-red-700 focus:ring-red-500 focus:border-red-500"
                       : "border-gray-300 dark:border-gray-700 focus:ring-blue-500 focus:border-blue-500"
                   } rounded-md shadow-sm placeholder-gray-400 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 sm:text-sm`}
                   placeholder="••••••••"
                 />
-                {formErrors.confirmPassword && (
+                {formErrors.passwordConfirm && (
                   <p className="mt-1 text-sm text-red-600 dark:text-red-400">
-                    {formErrors.confirmPassword}
+                    {formErrors.passwordConfirm}
                   </p>
                 )}
               </div>

@@ -7,6 +7,8 @@ import {
   selectCurrentUser,
   selectIsAuthenticated,
 } from "../features/user/userSlice";
+import Cookies from "js-cookie";
+import authService from "../services/callAuthApi";
 
 function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -39,9 +41,15 @@ function Header() {
   }, []);
 
   // Handle logout
-  const handleLogout = () => {
-    dispatch(logoutUser());
-    setUserMenuOpen(false);
+  const handleLogout = async () => {
+    try {
+      const refreshToken = Cookies.get("refreshToken");
+      await authService.logout(refreshToken);
+      dispatch(logoutUser());
+      setUserMenuOpen(false);
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
   };
 
   // Get user initials for avatar
@@ -202,19 +210,19 @@ function Header() {
                       </p>
                     </div>
                     <Link
-                      to="/profile"
+                      to="/user/profile"
                       className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
                     >
                       Hồ sơ
                     </Link>
                     <Link
-                      to="/bookings"
+                      to="/user/bookings"
                       className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
                     >
                       Lịch sử đặt sân
                     </Link>
                     <Link
-                      to="/settings"
+                      to="/user/settings"
                       className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
                     >
                       Cài đặt
@@ -381,13 +389,13 @@ function Header() {
               </div>
 
               <Link
-                to="/profile"
+                to="/user/profile"
                 className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
               >
                 Hồ sơ
               </Link>
               <Link
-                to="/bookings"
+                to="/user/bookings"
                 className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
               >
                 Lịch sử đặt sân

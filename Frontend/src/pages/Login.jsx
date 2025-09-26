@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook, FaGithub } from "react-icons/fa";
 import { loginUser } from "../features/user/userSlice";
+import authService from "../services/callAuthApi";
 
 function Login() {
   const [credentials, setCredentials] = useState({
@@ -80,17 +81,8 @@ function Login() {
     setIsSubmitting(true);
 
     try {
-      // Simulate API call with timeout
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
       // Dispatch login action (this would typically handle API calls and state updates)
-      dispatch(
-        loginUser({
-          email: credentials.email,
-          name: "Người Dùng",
-          // Other user data would come from API
-        })
-      );
+      dispatch(loginUser(credentials));
 
       // Redirect to home or intended page
       navigate("/");

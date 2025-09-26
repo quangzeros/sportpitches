@@ -10,6 +10,7 @@ import { checkAuth } from "./features/user/userSlice";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ForgotPassword from "./pages/ForgotPassword";
+import Profile from "./pages/user/profile";
 
 const router = createBrowserRouter([
   {
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
       {
         path: "/forgot-password",
         element: <ForgotPassword />,
+      },
+      {
+        path: "/user/profile",
+        element: <Profile />,
       },
       {
         path: "*", // Catch-all route

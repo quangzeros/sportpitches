@@ -5,6 +5,7 @@ import Header from "./Header";
 import Footer from "./Footer";
 import Loader from "./Loader";
 import Toast from "./Toast";
+import ChatWidget from "../utils/ChatWidget";
 import { setDarkMode } from "../features/ui/uiSlice";
 
 function AppLayout() {
@@ -44,6 +45,11 @@ function AppLayout() {
       {/* System notifications */}
       <div className="fixed bottom-4 right-4 z-50">
         <Toast />
+      </div>
+
+      {/* Chat Widget - đặt ở dưới Toast để không bị che phủ */}
+      <div className="fixed bottom-4 right-4 z-50">
+        <ChatWidget />
       </div>
 
       <Footer />

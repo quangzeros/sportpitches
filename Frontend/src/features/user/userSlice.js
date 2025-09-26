@@ -1,26 +1,38 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import Cookies from "js-cookie";
+import authService from "../../services/callAuthApi";
 
+const setCookieSecure = (name, value, options = {}) => {
+  // Mặc định cookies có thời hạn 7 ngày nếu không chỉ định
+  const defaultOptions = {
+    expires: 7,
+    path: "/",
+    secure: import.meta.env.VITE_NODE_ENV === "production", // Chỉ bật secure trong production
+    sameSite: "strict",
+  };
+
+  Cookies.set(name, value, { ...defaultOptions, ...options });
+};
 // Async thunks
 export const loginUser = createAsyncThunk(
   "user/login",
   async (credentials, { rejectWithValue }) => {
     try {
-      // Đây là nơi bạn sẽ gọi API đăng nhập thật
-      // const response = await fetch('/api/login', {...})
+      const { data } = await authService.login(credentials);
 
-      // Giả lập API call thành công
-      const response = {
-        id: "123",
-        name: "Nguyễn Văn A",
-        email: credentials.email,
-        avatar: null,
-        role: "user",
-        token: "jwt-token-would-be-here",
-      };
+      // Lưu tokens vào cookies
+      Cookies.set("accessToken", data.accessToken, {
+        expires: 1 / 24, // 1 giờ
+        secure: import.meta.env.NODE_ENV === "production",
+        sameSite: "strict",
+      });
 
-      // Lưu token vào localStorage để duy trì đăng nhập
-      localStorage.setItem("token", response.token);
-      return response;
+      Cookies.set("refreshToken", data.refreshToken, {
+        expires: 7, // 7 ngày
+        secure: import.meta.env.NODE_ENV === "production",
+        sameSite: "strict",
+      });
+      return data.user;
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -29,36 +41,55 @@ export const loginUser = createAsyncThunk(
 
 export const logoutUser = createAsyncThunk(
   "user/logout",
-  async (_, { dispatch }) => {
-    // Xóa token khỏi localStorage
-    localStorage.removeItem("token");
-    return null;
+  async (_, { rejectWithValue }) => {
+    try {
+      // Gọi API logout nếu cần
+      const refreshToken = Cookies.get("refreshToken");
+      if (refreshToken) {
+        await authService.logout(refreshToken);
+      }
+
+      // Xóa cookies
+      Cookies.remove("accessToken");
+      Cookies.remove("refreshToken");
+
+      return null;
+    } catch (error) {
+      // Vẫn xóa cookies ngay cả khi API bị lỗi
+      Cookies.remove("accessToken");
+      Cookies.remove("refreshToken");
+      return rejectWithValue(error.message);
+    }
   }
 );
 
 export const checkAuth = createAsyncThunk(
   "user/checkAuth",
-  async (_, { rejectWithValue }) => {
+  async (_, { rejectWithValue, dispatch }) => {
     try {
-      const token = localStorage.getItem("token");
-      if (!token) return null;
+      const refreshToken = Cookies.get("refreshToken");
+      if (!refreshToken) return null;
 
       // Đây là nơi bạn sẽ gọi API để kiểm tra token có hợp lệ không
-      // const response = await fetch('/api/verify-token', {...})
+      const { data } = await authService.checkAuth(refreshToken);
+      setCookieSecure("accessToken", data.accessToken);
 
-      // Giả lập API call thành công
-      const response = {
-        id: "123",
-        name: "Nguyễn Văn A",
-        email: "user@example.com",
-        avatar: null,
-        role: "user",
-        token: token,
-      };
-
-      return response;
+      return data.user;
     } catch (error) {
-      localStorage.removeItem("token");
+      dispatch(logoutUser());
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const updateUserProfile = createAsyncThunk(
+  "user/updateProfile",
+  async (updatedInfo, { rejectWithValue }) => {
+    try {
+      const { data } = await authService.updateProfile(updatedInfo);
+      setCookieSecure("accessToken", data.accessToken);
+      return data.user;
+    } catch (error) {
       return rejectWithValue(error.message);
     }
   }
@@ -77,9 +108,6 @@ const userSlice = createSlice({
   reducers: {
     clearError: (state) => {
       state.error = null;
-    },
-    updateUserProfile: (state, action) => {
-      state.currentUser = { ...state.currentUser, ...action.payload };
     },
   },
   extraReducers: (builder) => {
@@ -125,10 +153,24 @@ const userSlice = createSlice({
         state.currentUser = null;
         state.isAuthenticated = false;
       });
+
+    // Update profile cases
+    builder
+      .addCase(updateUserProfile.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(updateUserProfile.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.currentUser = action.payload;
+      })
+      .addCase(updateUserProfile.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload || "Cập nhật hồ sơ thất bại";
+      });
   },
 });
 
-export const { clearError, updateUserProfile } = userSlice.actions;
+export const { clearError } = userSlice.actions;
 
 // Selectors
 export const selectCurrentUser = (state) => state.user.currentUser;

@@ -23,7 +23,6 @@ const userSchema = new mongoose.Schema(
       required: [true, "Mật khẩu không được để trống"],
       min: 8,
       max: 255,
-      select: false, // Không trả về password khi query
     },
     phone: {
       type: String,
@@ -47,6 +46,7 @@ const userSchema = new mongoose.Schema(
     verificationToken: String,
     resetPasswordToken: String,
     resetPasswordExpires: Date,
+
     favoriteVenues: [
       {
         type: mongoose.Schema.Types.ObjectId,

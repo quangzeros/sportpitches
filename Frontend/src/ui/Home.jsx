@@ -30,7 +30,88 @@ const BadmintonIcon = () => (
 
 // Import your hero image
 // import heroImage from "../assets/images/hero-background.jpg";
-
+const featuredVenues = [
+  {
+    id: 1,
+    name: "Sân bóng đá Mini Thành Phát",
+    image:
+      "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?ixlib=rb-4.0.3",
+    category: "football",
+    rating: 4.8,
+    location: "Cầu Giấy, Hà Nội",
+    price: "300.000đ",
+  },
+  {
+    id: 2,
+    name: "Sân cầu lông Star Sport",
+    image:
+      "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?ixlib=rb-4.0.3",
+    category: "badminton",
+    rating: 4.6,
+    location: "Đống Đa, Hà Nội",
+    price: "120.000đ",
+  },
+  {
+    id: 3,
+    name: "Sân Tennis Victory",
+    image:
+      "https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?ixlib=rb-4.0.3",
+    category: "tennis",
+    rating: 4.7,
+    location: "Quận 7, TP.HCM",
+    price: "250.000đ",
+  },
+  {
+    id: 4,
+    name: "Sân bóng rổ Thể Thao Plus",
+    image:
+      "https://images.unsplash.com/photo-1608245449230-4ac19066d2d0?ixlib=rb-4.0.3",
+    category: "basketball",
+    rating: 4.5,
+    location: "Thanh Xuân, Hà Nội",
+    price: "200.000đ",
+  },
+  {
+    id: 5,
+    name: "Sân bóng đá Mỹ Đình Sports",
+    image:
+      "https://images.unsplash.com/photo-1556056504-5c7696c4c28d?ixlib=rb-4.0.3",
+    category: "football",
+    rating: 4.9,
+    location: "Nam Từ Liêm, Hà Nội",
+    price: "350.000đ",
+  },
+  {
+    id: 6,
+    name: "Sân cầu lông Olympia",
+    image:
+      "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?ixlib=rb-4.0.3",
+    category: "badminton",
+    rating: 4.7,
+    location: "Quận 3, TP.HCM",
+    price: "150.000đ",
+  },
+  {
+    id: 7,
+    name: "Sân bóng chuyền Đại học Thể dục Thể thao",
+    image:
+      "https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?ixlib=rb-4.0.3",
+    category: "volleyball",
+    rating: 4.4,
+    location: "Từ Liêm, Hà Nội",
+    price: "180.000đ",
+  },
+  {
+    id: 8,
+    name: "Sân bóng bàn Hà Đông",
+    image:
+      "https://images.unsplash.com/photo-1609710228159-0fa9bd7c0827?ixlib=rb-4.0.3",
+    category: "tabletennis",
+    rating: 4.3,
+    location: "Hà Đông, Hà Nội",
+    price: "80.000đ",
+  },
+];
 function Home() {
   const [activeCategory, setActiveCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
@@ -38,88 +119,6 @@ function Home() {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
 
   // Featured venues data
-  const featuredVenues = [
-    {
-      id: 1,
-      name: "Sân bóng đá Mini Thành Phát",
-      image:
-        "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?ixlib=rb-4.0.3",
-      category: "football",
-      rating: 4.8,
-      location: "Cầu Giấy, Hà Nội",
-      price: "300.000đ",
-    },
-    {
-      id: 2,
-      name: "Sân cầu lông Star Sport",
-      image:
-        "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?ixlib=rb-4.0.3",
-      category: "badminton",
-      rating: 4.6,
-      location: "Đống Đa, Hà Nội",
-      price: "120.000đ",
-    },
-    {
-      id: 3,
-      name: "Sân Tennis Victory",
-      image:
-        "https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?ixlib=rb-4.0.3",
-      category: "tennis",
-      rating: 4.7,
-      location: "Quận 7, TP.HCM",
-      price: "250.000đ",
-    },
-    {
-      id: 4,
-      name: "Sân bóng rổ Thể Thao Plus",
-      image:
-        "https://images.unsplash.com/photo-1608245449230-4ac19066d2d0?ixlib=rb-4.0.3",
-      category: "basketball",
-      rating: 4.5,
-      location: "Thanh Xuân, Hà Nội",
-      price: "200.000đ",
-    },
-    {
-      id: 5,
-      name: "Sân bóng đá Mỹ Đình Sports",
-      image:
-        "https://images.unsplash.com/photo-1556056504-5c7696c4c28d?ixlib=rb-4.0.3",
-      category: "football",
-      rating: 4.9,
-      location: "Nam Từ Liêm, Hà Nội",
-      price: "350.000đ",
-    },
-    {
-      id: 6,
-      name: "Sân cầu lông Olympia",
-      image:
-        "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?ixlib=rb-4.0.3",
-      category: "badminton",
-      rating: 4.7,
-      location: "Quận 3, TP.HCM",
-      price: "150.000đ",
-    },
-    {
-      id: 7,
-      name: "Sân bóng chuyền Đại học Thể dục Thể thao",
-      image:
-        "https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?ixlib=rb-4.0.3",
-      category: "volleyball",
-      rating: 4.4,
-      location: "Từ Liêm, Hà Nội",
-      price: "180.000đ",
-    },
-    {
-      id: 8,
-      name: "Sân bóng bàn Hà Đông",
-      image:
-        "https://images.unsplash.com/photo-1609710228159-0fa9bd7c0827?ixlib=rb-4.0.3",
-      category: "tabletennis",
-      rating: 4.3,
-      location: "Hà Đông, Hà Nội",
-      price: "80.000đ",
-    },
-  ];
 
   // Categories
   const categories = [
@@ -252,7 +251,7 @@ function Home() {
     }
 
     setVisibleVenues(filteredVenues);
-  }, [activeCategory, searchQuery, featuredVenues]);
+  }, [activeCategory, searchQuery]);
 
   // Star rating component
   const StarRating = ({ rating }) => {
